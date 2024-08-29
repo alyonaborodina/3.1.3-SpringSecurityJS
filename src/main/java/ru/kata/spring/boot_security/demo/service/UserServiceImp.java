@@ -35,6 +35,11 @@ public class UserServiceImp implements UserService, UserDetailsService {
 
     private UserService userService;
 
+    public Role findRoleByName(String name) {
+        return roleRepository.findByName(name);
+    }
+
+
     @Transactional
     public Role createRoles(String roleName) {
         Role role = new Role();

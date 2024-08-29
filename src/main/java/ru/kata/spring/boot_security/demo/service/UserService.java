@@ -17,4 +17,5 @@ public interface UserService {
     User findByUsername(String username);
     void createUser(String username, String password, Set<Role> roles);
     Role createRoles(String roleUser);
+    Role findRoleByName(String name);
 }

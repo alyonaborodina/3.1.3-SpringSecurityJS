@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="">
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -8,10 +8,19 @@
 <body>
 <div>
     <th:block th:each="user : ${users}">
-        <a th:href="@{/edit/{id}(id=${user.id})}" th:text="${user.name} + ' ' + ${user.password}"></a>
+        <a th:href="@{/admin/edit/{id}(id=${user.id})}" th:text="${user.name} + ' ' + ${user.password}"></a>
         <br/>
     </th:block>
 </div>
 <a href="new">Create new user</a>
+
+<br/>
+<div>
+    <sec:authorize access="isAuthenticated()">
+        <form  th:action="@{/logout}" method="post">
+            <input type="submit" value="Выйти">
+        </form>
+    </sec:authorize>
+</div>
 </body>
 </html>

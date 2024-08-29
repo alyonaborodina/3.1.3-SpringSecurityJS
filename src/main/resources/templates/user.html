@@ -7,6 +7,13 @@
 <h1>User, welcome spring boot security page!</h1>
 
 <a href="users">All users, only for admin!</a>
-
+<br/>
+<div>
+    <sec:authorize access="isAuthenticated()">
+        <form  th:action="@{/logout}" method="post">
+            <input type="submit" value="Выйти">
+        </form>
+    </sec:authorize>
+</div>
 </body>
 </html>
