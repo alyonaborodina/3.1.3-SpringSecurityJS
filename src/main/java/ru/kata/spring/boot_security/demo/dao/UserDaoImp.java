@@ -1,5 +1,6 @@
 package ru.kata.spring.boot_security.demo.dao;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.models.User;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -13,22 +14,23 @@ public class UserDaoImp implements UserDao {
     @PersistenceContext
     private EntityManager entityManager;
 
-
+    @Transactional
     @Override
-    public void add(User user) {
-        entityManager.persist(user);
-    }
-
-
-    @Override
-    public void update(User user) {
-        entityManager.merge(user);
+    public void save(User user) {
+        if (user.getUsername() == null) {
+            this.entityManager.persist(user);
+        } else {
+            this.entityManager.merge(user);
+        }
     }
 
 
     @Override
     public void delete(User user) {
-        entityManager.remove(entityManager.contains(user) ? user : entityManager.merge(user));
+        if (!entityManager.contains(user)) {
+            user = entityManager.find(User.class, user.getId());
+        }
+        entityManager.remove(user);
     }
 
 
@@ -42,5 +44,11 @@ public class UserDaoImp implements UserDao {
     public User findById(Integer id) {
         return entityManager.find(User.class, id);
     }
+
+    @Override
+    public User findByUsername(String username) {
+        return null;
+    }
+
 }
 

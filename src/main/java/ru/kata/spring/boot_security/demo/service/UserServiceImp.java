@@ -2,19 +2,16 @@ package ru.kata.spring.boot_security.demo.service;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.kata.spring.boot_security.demo.dao.RoleDao;
 import ru.kata.spring.boot_security.demo.dao.UserDao;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
-import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
-import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 
 import java.util.*;
 
@@ -22,42 +19,11 @@ import java.util.*;
 @Service
 public class UserServiceImp implements UserService, UserDetailsService {
 
+    @Autowired
     private UserDao userDao;
 
     @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
     private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    private UserService userService;
-
-    public Role findRoleByName(String name) {
-        return roleRepository.findByName(name);
-    }
-
-
-    @Transactional
-    public Role createRoles(String roleName) {
-        Role role = new Role();
-        role.setName(roleName);
-        return roleRepository.save(role); // Возвращаем созданную роль
-    }
-
-    @Transactional
-    public void createUser(String username, String password, Set<Role> roles) {
-        if (roles == null || roles.isEmpty()) {
-            throw new RuntimeException("At least one role must be provided");
-        }
-        User user = new User();
-        user.setName(username);
-        user.setPassword(passwordEncoder.encode(password));
-        user.setRoles(roles);
-        userRepository.save(user);
-    }
 
     @Autowired
     public UserServiceImp(UserDao userDao) {
@@ -74,17 +40,6 @@ public class UserServiceImp implements UserService, UserDetailsService {
     @Override
     public User findById(Integer id) {
         return userDao.findById(id);
-    }
-
-
-    @Override
-    public void add(User user) {
-        userDao.add(user);
-    }
-
-    @Override
-    public void update(User user) {
-        userDao.update(user);
     }
 
     @Override
@@ -106,11 +61,13 @@ public class UserServiceImp implements UserService, UserDetailsService {
 
 
     public User findByUsername(String username) {
-        return userRepository.findByUsername(username);
+        return userDao.findByUsername(username);
+    }
+
+    @Override
+    public void save(User user) {
+        userDao.save(user);
     }
 
 
-    public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 }

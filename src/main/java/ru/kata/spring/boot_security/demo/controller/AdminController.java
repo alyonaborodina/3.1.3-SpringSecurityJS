@@ -1,6 +1,7 @@
 package ru.kata.spring.boot_security.demo.controller;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +12,8 @@ import ru.kata.spring.boot_security.demo.service.UserService;
 @Controller
 public class AdminController {
 
-    private final UserService userService;
+    @Autowired
+    private UserService userService;
 
     public AdminController(UserService userService) {
         this.userService = userService;
@@ -32,7 +34,7 @@ public class AdminController {
 
     @PostMapping("/")
     public String saveUser(@ModelAttribute("user") User user) {
-        userService.add(user);
+        userService.save(user);
         return "redirect:/admin/";
     }
 
@@ -46,7 +48,7 @@ public class AdminController {
     @PostMapping("/edit/{id}")
     public String saveEditedUser(@ModelAttribute("user") User user, @PathVariable Integer id) {
         user.setId(id);
-        userService.update(user);
+        userService.save(user);
         return "redirect:/admin/";
     }
 
@@ -56,13 +58,5 @@ public class AdminController {
         userService.delete(user);
         return "redirect:/admin/";
     }
-
-
-
-
-
-
-
-
 
 }
