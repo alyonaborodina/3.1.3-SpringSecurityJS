@@ -32,7 +32,7 @@ public class SpringBootSecurityDemoApplication {
             adminRoles.add(adminRole);
             User adminUser = new User();
             adminUser.setName("admin");
-            adminUser.setPassword(passwordEncoder.encode("admin123"));
+            adminUser.setPassword("admin123");
             adminUser.setRoles(adminRoles);
             userService.save(adminUser);
 
@@ -40,7 +40,7 @@ public class SpringBootSecurityDemoApplication {
             userRoles.add(userRole);
             User userUser = new User();
             userUser.setName("user");
-            userUser.setPassword(passwordEncoder.encode("user123"));
+            userUser.setPassword("user123");
             userUser.setRoles(userRoles);
             userService.save(userUser);
 
