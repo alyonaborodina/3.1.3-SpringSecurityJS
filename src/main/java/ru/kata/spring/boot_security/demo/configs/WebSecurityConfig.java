@@ -17,10 +17,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import ru.kata.spring.boot_security.demo.service.UserServiceImp;
 
+import static org.hibernate.tool.schema.SchemaToolingLogging.LOGGER;
+
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    private final SuccessUserHandler successUserHandler;
+
+    @Autowired
+    private SuccessUserHandler successUserHandler;
 
     public WebSecurityConfig(SuccessUserHandler successUserHandler) {
         this.successUserHandler = successUserHandler;
@@ -32,8 +36,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userServiceImp);
+        LOGGER.info(auth.userDetailsService(userServiceImp));
     }
-
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -49,6 +53,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .logout().logoutSuccessUrl("/login").permitAll()
                 .permitAll();
+
     }
 
 

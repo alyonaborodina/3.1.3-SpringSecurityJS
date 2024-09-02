@@ -1,4 +1,5 @@
 package ru.kata.spring.boot_security.demo.service;
+import java.util.logging.Logger;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,8 @@ import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 
 import java.util.*;
+
+import static org.hibernate.tool.schema.SchemaToolingLogging.LOGGER;
 
 @Transactional(readOnly = true)
 @Service
@@ -50,13 +53,23 @@ public class UserServiceImp implements UserService, UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        // Логируем начало метода
+        LOGGER.info("Запрос пользователя с именем: " + username);
         User user = findByUsername(username);
+
         // Проверка, найден ли пользователь
         if (user == null) {
             throw new UsernameNotFoundException("User not found with username: " + username);
 
         }
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), user.getAuthorities(user.getRoles()));
+        LOGGER.info("Создание UserDetails для пользователя: " + username);
+        LOGGER.info("Имя: " + user.getUsername());
+        LOGGER.info("Пароль: " + user.getPassword());
+        LOGGER.info("Роль: " + user.getAuthorities(user.getRoles()));
+        return new org.springframework.security.core.userdetails
+                .User(user.getUsername(),
+                user.getPassword(),
+                user.getAuthorities(user.getRoles()));
     }
 
 
@@ -65,6 +78,7 @@ public class UserServiceImp implements UserService, UserDetailsService {
     }
 
     @Override
+    @Transactional(readOnly = false)
     public void save(User user) {
         userDao.save(user);
     }
