@@ -1,7 +1,6 @@
 package ru.kata.spring.boot_security.demo.models;
 
 
-import org.hibernate.mapping.Set;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -69,12 +68,11 @@ public class User implements UserDetails {
     @JoinTable(name="users_roles",
     joinColumns = @JoinColumn(name = "user_id"),
     inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set <Role> roles;
 
-    private Collection<Role> roles;
-
-    public User(int id, String name, String password, Collection<Role> roles) {
+    public User(int id, String username, String password, Set <Role> roles) {
         this.id = id;
-        this.username = name;
+        this.username = username;
         this.password = password;
         this.roles = roles;
     }
@@ -87,11 +85,11 @@ public class User implements UserDetails {
         this.id = id;
     }
 
-    public Collection<Role> getRoles() {
+    public Set<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(Collection<Role> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 
@@ -103,8 +101,8 @@ public class User implements UserDetails {
         return username;
     }
 
-    public void setName(String name) {
-        this.username = name;
+    public void setName(String username) {
+        this.username = username;
     }
 
     @Override
@@ -120,8 +118,8 @@ public class User implements UserDetails {
         return Objects.hash(id, username, password, roles);
     }
 
-    public Collection<? extends GrantedAuthority> getAuthorities(Collection<Role> roles) {
-        List<GrantedAuthority> authorities = new ArrayList<>();
+    public Collection<? extends GrantedAuthority> getAuthorities(Set <Role> roles) {
+        Set<GrantedAuthority> authorities = new HashSet<>();
         for (Role role : roles) {
             authorities.add(new SimpleGrantedAuthority(role.getName()));
         }
@@ -129,5 +127,6 @@ public class User implements UserDetails {
     }
 
     public void setUsername(String username) {
+        this.username = username;
     }
 }

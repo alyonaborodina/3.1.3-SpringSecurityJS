@@ -3,13 +3,17 @@ package ru.kata.spring.boot_security.demo.dao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
+import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import org.springframework.stereotype.Repository;
+import ru.kata.spring.boot_security.demo.service.RoleService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -20,6 +24,9 @@ public class UserDaoImp implements UserDao {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    @Autowired
+    private RoleService roleService;
 
     @Override
     @Transactional
@@ -36,7 +43,7 @@ public class UserDaoImp implements UserDao {
     @Override
     @Transactional(readOnly = false)
     public void save(User user) {
-        if (user.getUsername() == null) {
+        if (user.getId() == 0) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));// Проверка на существование пользователя
             saveNewUser(user);
         } else {
@@ -47,13 +54,12 @@ public class UserDaoImp implements UserDao {
 
 
     @Override
-    public void delete(User user) {
-        if (!entityManager.contains(user)) {
-            user = entityManager.find(User.class, user.getId());
-        }
-        entityManager.remove(user);
+    @Transactional(readOnly = false)
+    public void delete(Integer userId) {
+        Query query = entityManager.createQuery("DELETE FROM User u WHERE u.id = :userId");
+        query.setParameter("userId", userId);
+        int result = query.executeUpdate();
     }
-
 
     @Override
     public List<User> findAll() {

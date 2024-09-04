@@ -11,8 +11,7 @@ import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @SpringBootApplication
 public class SpringBootSecurityDemoApplication {
@@ -43,6 +42,18 @@ public class SpringBootSecurityDemoApplication {
             userUser.setPassword("user123");
             userUser.setRoles(userRoles);
             userService.save(userUser);
+
+            User test = new User();
+            test.setName("test");
+            test.setPassword("test123");
+            List<String> roleIdsTest = new ArrayList<>(Arrays.asList("1", "2"));
+            Set<Role> rolesSet = new HashSet<>();
+            for (String roleId : roleIdsTest) {
+                Role role = roleService.findById(Long.parseLong(roleId));
+                rolesSet.add(role);
+            }
+            test.setRoles(rolesSet);
+            userService.save(test);
 
         };
     }
