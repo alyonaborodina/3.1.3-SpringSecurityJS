@@ -11,14 +11,14 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.dao.UserDao;
 import ru.kata.spring.boot_security.demo.models.User;
 
-import java.util.*;
+import java.util.List;
+
 
 @Transactional(readOnly = true)
 @Service
 public class UserServiceImp implements UserService, UserDetailsService {
 
-    @Autowired
-    private UserDao userDao;
+    private final UserDao userDao;
 
     @Autowired
     private PasswordEncoder passwordEncoder;

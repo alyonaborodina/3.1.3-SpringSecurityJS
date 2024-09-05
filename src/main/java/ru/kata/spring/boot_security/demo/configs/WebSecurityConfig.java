@@ -23,15 +23,15 @@ import static org.hibernate.tool.schema.SchemaToolingLogging.LOGGER;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private SuccessUserHandler successUserHandler;
 
-    public WebSecurityConfig(SuccessUserHandler successUserHandler) {
+    private final SuccessUserHandler successUserHandler;
+
+    public WebSecurityConfig(SuccessUserHandler successUserHandler, UserServiceImp userServiceImp) {
         this.successUserHandler = successUserHandler;
+        this.userServiceImp = userServiceImp;
     }
 
-    @Autowired
-    private UserServiceImp userServiceImp;
+    private final UserServiceImp userServiceImp;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {

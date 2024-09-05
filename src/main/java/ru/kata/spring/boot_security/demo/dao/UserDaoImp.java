@@ -19,14 +19,15 @@ import java.util.List;
 @Repository
 public class UserDaoImp implements UserDao {
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Autowired
-    private RoleService roleService;
+
+    public UserDaoImp(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
     @Transactional

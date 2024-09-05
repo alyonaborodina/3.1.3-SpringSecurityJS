@@ -14,8 +14,12 @@ import java.util.Set;
 @Service
 public class RoleServiceImp implements RoleService {
 
-    @Autowired
-    private RoleDao roleDao;
+
+    private final RoleDao roleDao;
+
+    public RoleServiceImp(RoleDao roleDao) {
+        this.roleDao = roleDao;
+    }
 
     @Transactional
     public Role add(String roleName) {

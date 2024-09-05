@@ -17,7 +17,9 @@ import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import javax.validation.Valid;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
+
 
 @RequestMapping("/admin")
 @Controller
@@ -25,12 +27,12 @@ public class AdminController {
 
     private final UserService userService;
 
-    @Autowired
-    private RoleService roleService;
+    private final RoleService roleService;
 
 
-    public AdminController(UserService userService) {
+    public AdminController(UserService userService, RoleService roleService) {
         this.userService = userService;
+        this.roleService = roleService;
     }
 
     @GetMapping("/")
@@ -61,11 +63,7 @@ public class AdminController {
     @PostMapping("/edit/{id}")
     public String saveEditedUser(@Valid User user, BindingResult bindingResult,
                                  @PathVariable Integer id, @RequestParam(value = "selectedRoles") Set<String> selectedRoles) {
-        Set<Role> rolesSet = new HashSet<>();
-        for (String roleId : selectedRoles) {
-            Role role = roleService.findById(Long.parseLong(roleId));
-            rolesSet.add(role);
-        }
+        Set<Role> rolesSet = roleService.getRolesFromIds(selectedRoles);
         user.setRoles(rolesSet);
         userService.save(user);
         return "redirect:/admin/";
