@@ -6,7 +6,9 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.dao.RoleDao;
 import ru.kata.spring.boot_security.demo.models.Role;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Transactional(readOnly = true)
 @Service
@@ -20,6 +22,16 @@ public class RoleServiceImp implements RoleService {
         Role role = new Role();
         role.setName(roleName);
         return roleDao.add(role); // Возвращаем созданную роль
+    }
+
+    @Transactional
+    public Set<Role> getRolesFromIds(Set<String> roleIds) {
+        Set<Role> rolesSet = new HashSet<>();
+        for (String roleId : roleIds) {
+            Role role = roleDao.findById(Long.parseLong(roleId));
+            rolesSet.add(role);
+        }
+        return rolesSet;
     }
 
     @Transactional

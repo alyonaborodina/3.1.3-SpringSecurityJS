@@ -1,6 +1,7 @@
 package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,16 +27,19 @@ public class UserController {
     private RoleService roleService;
 
     @GetMapping("/")
-    public String index(Model model) {
-        // Получаем текущего пользователя
-        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        model.addAttribute("currentUser", currentUser);
+    public String ShowUser(Model model) {
+// Получаем текущего аутентифицированного пользователя
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        List<User> users = userService.findAll(); // Полагаем, что этот метод возвращает список всех пользователей
-        model.addAttribute("users", users);
-        model.addAttribute("roles", roleService.findAll());
+        if (authentication != null && authentication.isAuthenticated()) {
+            // Получаем пользователя
+            String currentUserName = authentication.getName(); // это имя пользователя
+            model.addAttribute("username", currentUserName); // добавляем в модель для использования в представлении
+        } else {
+            model.addAttribute("username", "Гость"); // альтернативное значение для неаутентифицированных пользователей
+        }
 
-        return "user"; // Используем один шаблон для всех вкладок
+        return "user";
 
     }
 }

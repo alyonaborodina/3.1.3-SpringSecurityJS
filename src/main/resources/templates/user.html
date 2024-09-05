@@ -16,37 +16,8 @@
 </head>
 <body>
 <div class="container">
-    <h2>Добро пожаловать, <span th:text="${currentUser.name}"></span>!</h2> <!-- Выводим имя текущего пользователя -->
+    <h2>Добро пожаловать, !</h2> <!-- Выводим имя текущего пользователя -->
 
-    <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show active" id="view-users" role="tabpanel" aria-labelledby="users-tab">
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th scope="col">Name</th>
-                        <th scope="col">Role</th>
-                        <th scope="col">Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="user : ${users}">
-                        <td th:text="${user.name}"></td>
-                        <td th:text="${user.getAuthorities(user.getRoles())}"></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-    <br/>
-    <div>
-        <sec:authorize access="isAuthenticated()">
-            <form th:action="@{/logout}" method="post">
-                <input type="submit" value="Выйти">
-            </form>
-        </sec:authorize>
-    </div>
 </div>
 </body>
 

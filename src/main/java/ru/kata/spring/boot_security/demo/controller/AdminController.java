@@ -5,7 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
@@ -18,8 +23,7 @@ import java.util.*;
 @Controller
 public class AdminController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
     private RoleService roleService;
@@ -39,11 +43,7 @@ public class AdminController {
 
     @PostMapping("/save")
     public String saveUser(@ModelAttribute("user") User user, @RequestParam("roleIds") Set<String> roleIds) {
-        Set<Role> rolesSet = new HashSet<>();
-        for (String roleId : roleIds) {
-            Role role = roleService.findById(Long.parseLong(roleId));
-            rolesSet.add(role);
-        }
+        Set<Role> rolesSet = roleService.getRolesFromIds(roleIds);
         user.setRoles(rolesSet);
         userService.save(user);
         return "redirect:/admin/";
