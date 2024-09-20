@@ -19,15 +19,9 @@ import java.util.List;
 @Repository
 public class UserDaoImp implements UserDao {
 
-    private final PasswordEncoder passwordEncoder;
 
     @PersistenceContext
     private EntityManager entityManager;
-
-
-    public UserDaoImp(PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
-    }
 
     @Override
     @Transactional
@@ -45,10 +39,8 @@ public class UserDaoImp implements UserDao {
     @Transactional(readOnly = false)
     public void save(User user) {
         if (user.getId() == 0) {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));// Проверка на существование пользователя
             saveNewUser(user);
         } else {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
             updateUser(user);
         }
     }
@@ -83,4 +75,3 @@ public class UserDaoImp implements UserDao {
     }
 
 }
-

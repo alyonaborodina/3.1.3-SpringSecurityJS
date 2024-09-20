@@ -24,8 +24,8 @@ public class SpringBootSecurityDemoApplication {
     @Bean
     CommandLineRunner run(UserService userService, RoleService roleService, PasswordEncoder passwordEncoder) {
         return args -> {
-            Role userRole = roleService.add("ROLE_USER");
             Role adminRole = roleService.add("ROLE_ADMIN");
+            Role userRole = roleService.add("ROLE_USER");
 
             // Создание пользователей
             Set<Role> adminRoles = new HashSet<>();
