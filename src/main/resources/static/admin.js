@@ -108,12 +108,25 @@ document.getElementById('newUser').addEventListener('submit', addNewUser);
 
 function addNewUser(form) {
     form.preventDefault();
+    let roleList = () => {
+        let array = []
+        let options = document.querySelector('#addRole').options
+        for (let i = 0; i < options.length; i++) {
+            if (options[i].selected) {
+                let role = {id: options[i].value, name: options[i].roleName}
+                array.push(role)
+            }
+        }
+        return array;
+    }
+
     let newUserForm = new FormData(form.target);
     let user = {
         username: newUserForm.get('username'),
         password: newUserForm.get('password'),
-        roles: rolesUser("#roles")
+        roles: roleList ()
     };
+
     let req = new Request("/api/admin", {
         method: 'POST',
         body: JSON.stringify(user),
